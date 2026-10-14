@@ -1,0 +1,505 @@
+/* .project-bim {
+  --bim-blue: #2A317A;
+  --bim-gray: #3C3C3B;
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  overflow: hidden;
+  background: #fff;
+  color: #000;
+  padding: 80px 28px;
+}
+.project-bim__inner { width: min(100%, 1240px); margin: 0 auto; }
+.project-bim__header { max-width: 780px; text-align: start; }
+.project-bim__eyebrow { display: flex; align-items: center; justify-content: flex-start; gap: 10px; margin: 0; color: var(--bim-blue); font: 700 12px/1.4 var(--font-body, sans-serif); letter-spacing: .13em; }
+.project-bim__eyebrow span { width: 22px; height: 1px; background: var(--bim-blue); }
+.project-bim__header h2 { margin: 14px 0 0; color: var(--bim-blue); font: 650 clamp(27px, 3.2vw, 42px)/1.12 var(--font-display, sans-serif); letter-spacing: -.035em; }
+.project-bim__header > p:last-child { margin: 10px 0 0; color: var(--bim-gray); font: 400 14px/1.6 var(--font-body, sans-serif); }
+.project-bim__diagram { position: relative; width: min(100%, 850px); aspect-ratio: 1 / 1; margin: -8px auto 0; }
+.project-bim__orbit { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.project-bim__orbit circle { fill: none; stroke: rgba(42,49,122,.25); stroke-width: .2; stroke-dasharray: .65 1.05; vector-effect: non-scaling-stroke; }
+.project-bim__connection { fill: none; stroke: var(--bim-blue); stroke-width: .45; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+.project-bim__model { position: absolute; z-index: 1; top: 50%; left: 50%; display: flex; width: 54%; height: 53%; flex-direction: column; align-items: center; justify-content: center; transform: translate(-50%,-50%); }
+.project-bim__model-content { display: flex; width: 100%; height: 100%; flex-direction: column; align-items: center; justify-content: center; }
+.project-bim__model img { display: block; width: 100%; height: calc(100% - 25px); object-fit: contain; mix-blend-mode: multiply; filter: drop-shadow(0 9px 12px rgba(42,49,122,.12)); }
+.project-bim__model-content > span { color: rgba(60,60,59,.68); font: 500 9px/1.3 var(--font-body, sans-serif); text-align: center; }
+.project-bim__phase { position: absolute; z-index: 2; display: flex; width: 166px; flex-direction: column; align-items: center; transform: translate(-50%,-50%); text-align: center; }
+.project-bim__phase.is-left { align-items: flex-start; transform: translate(0,-50%); text-align: start; }
+.project-bim__phase.is-right { align-items: flex-end; transform: translate(-100%,-50%); text-align: end; }
+.project-bim__phase-content { display: flex; flex-direction: column; align-items: center; gap: 7px; transform-origin: center; }
+.project-bim__phase.is-left .project-bim__phase-content { align-items: flex-start; }
+.project-bim__phase.is-right .project-bim__phase-content { align-items: flex-end; }
+.project-bim__dot { display: grid; width: 42px; height: 42px; place-items: center; border: 1px solid rgba(42,49,122,.55); border-radius: 50%; background: #fff; color: var(--bim-blue); font: 600 13px/1 var(--font-body, sans-serif); transition: background .3s ease, color .3s ease, box-shadow .3s ease, transform .3s ease; }
+.project-bim__phase.is-assigned .project-bim__dot { border-color: var(--bim-blue); background: var(--bim-blue); color: #fff; box-shadow: 0 4px 15px rgba(42,49,122,.2); transform: scale(1.08); }
+.project-bim__phase-copy { display: flex; max-width: 100%; flex-direction: column; gap: 2px; }
+.project-bim__phase-copy strong { color: var(--bim-gray); font: 650 11px/1.3 var(--font-body, sans-serif); }
+.project-bim__phase.is-assigned .project-bim__phase-copy strong { color: var(--bim-blue); }
+.project-bim__phase-copy small { color: var(--bim-blue); font: 500 10px/1.3 var(--font-body, sans-serif); }
+.project-bim__notice { width: fit-content; max-width: 100%; margin: -2px auto 0; padding: 9px 15px; border-inline-start: 2px solid var(--bim-blue); background: rgba(42,49,122,.035); color: var(--bim-gray); font: 400 11px/1.5 var(--font-body, sans-serif); text-align: center; }
+@media (max-width: 700px) {
+  .project-bim { min-height: 100svh; padding: 84px 14px 52px; }
+  .project-bim__header h2 { max-width: 520px; margin-inline: auto; font-size: clamp(25px, 7vw, 34px); }
+  .project-bim__header > p:last-child { font-size: 12px; }
+  .project-bim__diagram { width: 100%; max-width: 470px; aspect-ratio: .94; margin-top: 16px; }
+  .project-bim__model { width: 70%; height: 43%; }
+  .project-bim__model-content > span { font-size: 7px; }
+  .project-bim__phase { width: 112px; gap: 4px; }
+  .project-bim__phase-content { gap: 4px; }
+  .project-bim__dot { width: 32px; height: 32px; font-size: 10px; }
+  .project-bim__phase-copy strong { font-size: 9px; }
+  .project-bim__phase-copy small { font-size: 8px; }
+  .project-bim__phase.is-left, .project-bim__phase.is-right { width: 96px; }
+  .project-bim__notice { margin-top: 4px; font-size: 10px; }
+}
+@media (max-width: 370px) {
+  .project-bim { padding-inline: 8px; }
+  .project-bim__phase { width: 94px; }
+  .project-bim__dot { width: 29px; height: 29px; }
+  .project-bim__phase-copy strong { font-size: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .project-bim__dot { transition: none; }
+} */
+
+
+
+/* ==================================================================
+   ProjectBimJourney
+   Mobile-first: الموبايل = timeline رأسي، الديسكتوب (861px+) = دايرة/orbit
+   ================================================================== */
+
+.project-bim {
+  /* غيّري الألوان من هنا بس */
+  --bim-navy: #1f3888;
+  --bim-navy-2: #3550b8;
+  --bim-ink: #1e2432;
+  --bim-muted: #6c757d;
+  --bim-accent: #fec419;
+  --bim-line: #c9d0e6;
+  --bim-dot-off: #aab4d4;
+  --dot: 52px;
+
+  position: relative;
+  isolation: isolate; /* مهم: عشان الـ multiply بتاع الصورة يتخلط مع خلفية السيكشن */
+  overflow: hidden;
+  background: #fff;
+  color: var(--bim-ink);
+  padding: clamp(56px, 8vw, 112px) clamp(16px, 4vw, 48px);
+}
+
+/* شبكة blueprint خفيفة في الخلفية وبتختفي ناحية الأطراف */
+.project-bim::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgba(31, 56, 136, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(31, 56, 136, 0.06) 1px, transparent 1px);
+  background-size: 44px 44px;
+  -webkit-mask-image: radial-gradient(ellipse 75% 65% at 50% 58%, #000 15%, transparent 78%);
+  mask-image: radial-gradient(ellipse 75% 65% at 50% 58%, #000 15%, transparent 78%);
+}
+
+.project-bim__inner {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+/* ------------------------------ Header ------------------------------ */
+.project-bim__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 14px;
+  font-size: clamp(0.9rem, 0.8rem + 0.3vw, 1.05rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--bim-navy);
+}
+
+.project-bim__eyebrow span {
+  width: 36px;
+  height: 3px;
+  border-radius: 3px;
+  background: var(--bim-accent);
+}
+
+.project-bim__header h2 {
+  margin: 0 0 12px;
+  font-size: clamp(1.9rem, 1.2rem + 2.6vw, 3.1rem);
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--bim-navy);
+}
+
+.project-bim__intro {
+  margin: 0;
+  max-width: 60ch;
+  font-size: clamp(1rem, 0.9rem + 0.4vw, 1.2rem);
+  color: var(--bim-muted);
+}
+
+/* ------------------------------ Diagram (mobile) ------------------------------ */
+.project-bim__diagram {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin-top: 36px;
+}
+
+.project-bim__orbit {
+  display: none;
+}
+
+/* الصورة */
+.project-bim__model {
+  position: relative;
+  display: grid;
+  place-items: center;
+  margin-bottom: 24px;
+  pointer-events: none;
+}
+
+/* هالة زرقا ناعمة ورا الصورة بتخليها جزء من السيكشن */
+.project-bim__model::before {
+  content: "";
+  position: absolute;
+  inset: 8%;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(53, 80, 184, 0.14), transparent 100%);
+}
+
+.project-bim__model-content {
+  width: min(100%, 480px);
+}
+
+.project-bim__model img {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* بيخلي الخلفية البيضا للصورة تختفي وتبان خلفية السيكشن */
+  mix-blend-mode: multiply;
+  /* بيعمل fade للحواف عشان مفيش حد للصورة */
+  -webkit-mask-image: radial-gradient(closest-side, #000 64%, transparent 100%);
+  mask-image: radial-gradient(closest-side, #000 64%, transparent 100%);
+  animation: bim-float 8s ease-in-out infinite;
+}
+
+/* ------------------------------ Phase (mobile = timeline) ------------------------------ */
+.project-bim__phase {
+  position: relative;
+  padding-bottom: 28px;
+}
+
+.project-bim__phase:last-child {
+  padding-bottom: 0;
+}
+
+/* الخط الرأسي اللي بيوصل الـ phases في الموبايل */
+.project-bim__phase:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: calc(var(--dot) / 2 - 1px);
+  top: var(--dot);
+  bottom: 0;
+  width: 2px;
+  background: repeating-linear-gradient(var(--bim-line) 0 6px, transparent 6px 11px);
+  transition: background 0.4s ease;
+}
+
+.project-bim__phase.is-linked:not(:last-child)::before {
+  background: linear-gradient(var(--bim-navy), var(--bim-navy-2));
+}
+
+.project-bim__phase-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.project-bim__dot {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: var(--dot);
+  height: var(--dot);
+  border-radius: 50%;
+  background: var(--bim-dot-off);
+  color: #fff;
+  font-size: clamp(1.1rem, 1rem + 0.4vw, 1.4rem);
+  font-weight: 700;
+  box-shadow: 0 0 0 5px #fff, 0 6px 16px rgba(31, 56, 136, 0.12);
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.project-bim__phase.is-assigned .project-bim__dot {
+  background: linear-gradient(145deg, var(--bim-navy-2), var(--bim-navy));
+  box-shadow: 0 0 0 5px #fff, 0 10px 24px rgba(31, 56, 136, 0.3);
+}
+
+/* حلقة pulse حوالين الـ phase المعتمدة */
+.project-bim__phase.is-assigned .project-bim__dot::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 2px solid var(--bim-navy-2);
+  opacity: 0;
+  animation: bim-pulse 2.8s ease-out infinite;
+  animation-delay: calc(var(--i, 0) * 0.3s);
+}
+
+.project-bim__phase-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 6px;
+  transition: transform 0.3s ease;
+}
+
+.project-bim__phase-copy strong {
+  font-size: clamp(1.05rem, 0.95rem + 0.5vw, 1.35rem);
+  font-weight: 700;
+  line-height: 1.25;
+  color: #6b7399;
+  transition: color 0.3s ease;
+}
+
+.project-bim__phase-copy small {
+  font-size: clamp(0.9rem, 0.85rem + 0.25vw, 1.05rem);
+  font-weight: 600;
+  color: var(--bim-muted);
+}
+
+.project-bim__phase.is-assigned .project-bim__phase-copy strong {
+  color: var(--bim-navy);
+}
+
+/* hover */
+.project-bim__phase-content:hover .project-bim__dot {
+  transform: scale(1.1);
+}
+
+.project-bim__phase-content:hover .project-bim__phase-copy strong {
+  color: var(--bim-navy-2);
+}
+
+.project-bim__notice {
+  margin: 32px 0 0;
+  padding: 14px 18px;
+  border-inline-start: 4px solid var(--bim-accent);
+  border-radius: 4px;
+  background: rgba(31, 56, 136, 0.05);
+  font-size: clamp(0.95rem, 0.9rem + 0.2vw, 1.05rem);
+  color: var(--bim-muted);
+}
+
+/* ==================================================================
+   Desktop: orbit layout
+   ================================================================== */
+@media (min-width: 861px) {
+  .project-bim {
+    --dot: 60px;
+  }
+
+  .project-bim__diagram {
+    display: block;
+    aspect-ratio: 16 / 11;
+    max-width: 1100px;
+    margin: 56px auto 64px;
+  }
+
+  /* الخطوط */
+  .project-bim__orbit {
+    display: block;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .project-bim__orbit path,
+  .project-bim__orbit ellipse {
+    fill: none;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .project-bim__orbit-inner {
+    stroke: var(--bim-line);
+    stroke-width: 1;
+    stroke-dasharray: 2 8;
+    opacity: 0.7;
+  }
+
+  .project-bim__link {
+    stroke: var(--bim-line);
+    stroke-width: 1.5;
+    stroke-dasharray: 5 8;
+  }
+
+  .project-bim__link-active {
+    stroke: var(--bim-navy);
+    stroke-width: 3;
+    stroke-linecap: round;
+  }
+
+  .project-bim__link-flow {
+    stroke: #a9bdff;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-dasharray: 2 18;
+    opacity: 0;
+    animation:
+      bim-flow 1.8s linear infinite,
+      bim-fade-in 0.6s ease 2s forwards;
+  }
+
+  /* الصورة في نص الدايرة */
+  .project-bim__model {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+  }
+
+  .project-bim__model::before {
+    inset: 18% 24%;
+  }
+
+  .project-bim__model-content {
+    width: 42%;
+  }
+
+  /* كل phase = نقطة مرجعية (0×0) عند مكانها على الدايرة */
+  .project-bim__phase {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    z-index: 2;
+    width: 0;
+    height: 0;
+    padding: 0;
+  }
+
+  .project-bim__phase:not(:last-child)::before {
+    display: none;
+  }
+
+  .project-bim__phase-content {
+    position: relative;
+    display: block;
+  }
+
+  .project-bim__dot {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -50%);
+  }
+
+  .project-bim__phase-content:hover .project-bim__dot {
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+
+  .project-bim__phase-copy {
+    position: absolute;
+    width: max-content;
+    max-width: 220px;
+    padding: 0;
+  }
+
+  /* label تحت النقطة */
+  .project-bim__phase.is-center .project-bim__phase-copy {
+    top: calc(var(--dot) / 2 + 12px);
+    left: 0;
+    transform: translateX(-50%);
+    text-align: center;
+  }
+
+  .project-bim__phase.is-center .project-bim__phase-content:hover .project-bim__phase-copy {
+    transform: translateX(-50%) translateY(-3px);
+  }
+
+  /* label على يمين النقطة */
+  .project-bim__phase.is-right .project-bim__phase-copy {
+    top: 0;
+    left: calc(var(--dot) / 2 + 16px);
+    transform: translateY(-50%);
+    text-align: left;
+  }
+
+  .project-bim__phase.is-right .project-bim__phase-content:hover .project-bim__phase-copy {
+    transform: translateY(-50%) translateX(4px);
+  }
+
+  /* label على شمال النقطة */
+  .project-bim__phase.is-left .project-bim__phase-copy {
+    top: 0;
+    right: calc(var(--dot) / 2 + 16px);
+    transform: translateY(-50%);
+    text-align: right;
+  }
+
+  .project-bim__phase.is-left .project-bim__phase-content:hover .project-bim__phase-copy {
+    transform: translateY(-50%) translateX(-4px);
+  }
+}
+
+/* ------------------------------ Keyframes ------------------------------ */
+@keyframes bim-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes bim-pulse {
+  0% {
+    transform: scale(0.88);
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+
+@keyframes bim-flow {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+
+@keyframes bim-fade-in {
+  to {
+    opacity: 1;
+  }
+}
+
+/* ------------------------------ Reduced motion ------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  .project-bim__model img,
+  .project-bim__dot::after,
+  .project-bim__link-flow {
+    animation: none !important;
+  }
+
+  .project-bim__link-flow {
+    opacity: 0;
+  }
+
+  .project-bim__dot,
+  .project-bim__phase-copy {
+    transition: none;
+  }
+}

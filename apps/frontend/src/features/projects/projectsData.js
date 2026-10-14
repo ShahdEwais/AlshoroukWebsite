@@ -6,7 +6,7 @@ export const categories = [
 ];
 
 
- export const projects = [
+export const projects = [
   {
     id: 1,
     title: " FINANCIAL DISTRICT SQUARE",
@@ -466,6 +466,52 @@ export const categories = [
   },
 ];
 
+// Demo BIM phase assignments requested for the project timeline UI.
+// Replace with project-team confirmed data when it becomes available.
+export const projectBimPhaseAssignments = {
+  1: ["model-creation", "quantification", "as-built-model"],
+  2: ["model-creation", "construction-model"],
+  3: ["construction-model", "constructability", "shop-drawings"],
+  4: ["model-creation", "constructability", "as-built-model"],
+  5: ["model-creation", "construction-model", "quantification", "shop-drawings"],
+  6: ["quantification", "as-built-model", "as-built-drawings"],
+  7: ["model-creation", "construction-model", "constructability"],
+  8: ["construction-model", "shop-drawings", "as-built-drawings"],
+  9: ["model-creation"],
+  10: ["quantification", "constructability"],
+  11: ["model-creation", "construction-model", "as-built-model"],
+  12: ["construction-model", "quantification", "constructability", "shop-drawings"],
+  13: ["model-creation", "shop-drawings", "as-built-drawings"],
+  14: ["constructability", "as-built-model"],
+  15: ["model-creation", "quantification", "shop-drawings", "as-built-drawings"],
+  16: ["construction-model"],
+  17: ["model-creation", "constructability", "shop-drawings", "as-built-model"],
+  18: ["quantification", "constructability", "as-built-drawings"],
+  19: ["construction-model", "as-built-model", "as-built-drawings"],
+  20: ["model-creation", "construction-model", "quantification"],
+  21: ["quantification", "shop-drawings", "as-built-model"],
+  22: ["model-creation", "shop-drawings"],
+  23: ["construction-model", "constructability", "as-built-drawings"],
+  24: ["model-creation", "construction-model", "constructability", "as-built-model"],
+  25: ["quantification", "as-built-model"],
+  26: ["model-creation", "quantification", "shop-drawings", "as-built-model"],
+  27: ["construction-model", "quantification", "as-built-drawings"],
+  28: ["model-creation", "constructability"],
+  29: ["construction-model", "quantification", "constructability", "shop-drawings"],
+  30: ["model-creation", "as-built-model", "as-built-drawings"],
+  31: ["quantification", "constructability", "shop-drawings"],
+  32: ["model-creation", "construction-model", "shop-drawings", "as-built-drawings"],
+  33: ["constructability"],
+  34: ["construction-model", "constructability", "as-built-model"],
+  35: ["model-creation", "quantification", "as-built-model"],
+  36: ["construction-model", "shop-drawings", "as-built-model", "as-built-drawings"],
+  37: ["model-creation", "quantification", "constructability"],
+  38: ["constructability", "shop-drawings", "as-built-drawings"],
+  39: ["construction-model", "as-built-model"],
+  40: ["model-creation", "construction-model", "constructability", "shop-drawings"],
+  41: ["quantification", "shop-drawings", "as-built-drawings"],
+};
+
 
 export const projectDetails = {
   1: {
@@ -732,6 +778,7 @@ export const projectDetails = {
 
 export const projectsWithDetails = projects.map((p) => ({
   ...p,
+  bimPhaseIds: projectBimPhaseAssignments[p.id] || [],
   ...(projectDetails[p.id] || {}),
 }));
 

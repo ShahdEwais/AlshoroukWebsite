@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { newsStories } from "../news/newsData";
-import { projectDetails, projects } from "../projects/projectsData";
+import { projectBimPhaseAssignments, projectDetails, projects } from "../projects/projectsData";
 import {
   aboutDefaults,
   footerDefaults,
@@ -54,6 +54,9 @@ function normalizeProject(project) {
     title,
     titleAr: bilingual.ar,
     titleEn: bilingual.en,
+    bimPhaseIds: Array.isArray(project?.bimPhaseIds) && project.bimPhaseIds.length > 0
+      ? project.bimPhaseIds
+      : projectBimPhaseAssignments[project?.id] || [],
     published: project?.published !== false,
   };
 }
@@ -103,6 +106,7 @@ function seed() {
         category: project.category,
         src: project.src,
         gallery: Array.isArray(project.gallery) ? project.gallery : [],
+        bimPhaseIds: projectBimPhaseAssignments[project.id] || [],
         published: true,
       })
     ),

@@ -31,6 +31,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { normalizeStatus } from "../../features/projects/projectsData";
 import { usePublishedProjects } from "../../features/marketing/MarketingProvider";
+import PhaseFilter, { PHASES, getProjectPhaseIds } from "./PhaseFilter";
 
 const categories = [
   { label: "All", icon: Boxes },
@@ -89,7 +90,7 @@ function isDelivered(status) {
    PROJECT CARD
    ========================================================= */
 
-function ProjectCard({ project }) {
+function ProjectCard({ project , activePhase}) {
   const status = getDisplayStatus(project.status);
   const delivered = isDelivered(project.status);
 
@@ -169,6 +170,22 @@ function ProjectCard({ project }) {
           <h3 className="mt-1 text-sm font-bold uppercase leading-snug text-[#3C3C3B]">
             {project.title}
           </h3>
+          {activePhase !== "all" && (
+  <div aria-hidden="true" className="relative mt-3 flex items-center justify-between px-1">
+    <span className="absolute inset-x-1 top-1/2 h-0.5 -translate-y-1/2 bg-[#3C3C3B]/15" />
+    {PHASES.map((ph) => {
+      const on = getProjectPhaseIds(project).includes(ph.id);
+      return (
+        <i
+          key={ph.id}
+          className={`relative h-2.5 w-2.5 rounded-full border-2 ${
+            on ? "border-[#2A317A] bg-[#2A317A]" : "border-[#3C3C3B]/25 bg-white"
+          } ${ph.id === activePhase ? "scale-150 ring-4 ring-[#2A317A]/20" : ""}`}
+        />
+      );
+    })}
+  </div>
+)}
 
           {/* Location + Year */}
           {(project.location || project.year) && (
@@ -1131,6 +1148,7 @@ function MapView({
 
 export default function SectorFilterSection() {
   const projectsWithDetails = usePublishedProjects();
+  const [activePhase, setActivePhase] = useState("all");
   const [activeCategory, setActiveCategory] =
     useState("All");
 
@@ -1151,41 +1169,77 @@ export default function SectorFilterSection() {
 
   const sectionRef = useRef(null);
 
-  const filteredProjects = useMemo(() => {
-    return projectsWithDetails.filter(
-      (p) => {
-        const matchesCategory =
-          activeCategory === "All" ||
-          p.category === activeCategory;
+  // const filteredProjects = useMemo(() => {
+  //   return projectsWithDetails.filter(
+  //     (p) => {
+  //       const matchesCategory =
+  //         activeCategory === "All" ||
+  //         p.category === activeCategory;
 
-        const matchesStatus =
-          activeStatus === "All" ||
-          getDisplayStatus(p.status) ===
-            activeStatus;
+  //       const matchesStatus =
+  //         activeStatus === "All" ||
+  //         getDisplayStatus(p.status) ===
+  //           activeStatus;
 
-        const matchesSearch =
-          p.title
-            .toLowerCase()
-            .includes(
-              searchTerm
-                .trim()
-                .toLowerCase()
-            );
+  //       const matchesSearch =
+  //         p.title
+  //           .toLowerCase()
+  //           .includes(
+  //             searchTerm
+  //               .trim()
+  //               .toLowerCase()
+  //           );
 
-        return (
-          matchesCategory &&
-          matchesStatus &&
-          matchesSearch
-        );
-      }
-    );
-  }, [
-    activeCategory,
-    activeStatus,
-    projectsWithDetails,
-    searchTerm,
-  ]);
+  //       return (
+  //         matchesCategory &&
+  //         matchesStatus &&
+  //         matchesSearch
+  //       );
+  //     }
+  //   );
+  // }, [
+  //   activeCategory,
+  //   activeStatus,
+  //   projectsWithDetails,
+  //   searchTerm,
+  // ]);
 
+  // 1) المشاريع بعد Category + Status + Search (من غير الـ phase)
+const baseFiltered = useMemo(() => {
+  return projectsWithDetails.filter((p) => {
+    const matchesCategory =
+      activeCategory === "All" || p.category === activeCategory;
+
+    const matchesStatus =
+      activeStatus === "All" || getDisplayStatus(p.status) === activeStatus;
+
+    const matchesSearch = p.title
+      .toLowerCase()
+      .includes(searchTerm.trim().toLowerCase());
+
+    return matchesCategory && matchesStatus && matchesSearch;
+  });
+}, [activeCategory, activeStatus, projectsWithDetails, searchTerm]);
+
+// 2) عدد المشاريع في كل phase (على حسب الفلاتر التانية)
+const phaseCounts = useMemo(() => {
+  const counts = {};
+  PHASES.forEach((phase) => (counts[phase.id] = 0));
+
+  baseFiltered.forEach((p) => {
+    getProjectPhaseIds(p).forEach((id) => {
+      if (id in counts) counts[id] += 1;
+    });
+  });
+
+  return counts;
+}, [baseFiltered]);
+
+// 3) النتيجة النهائية بعد فلتر الـ phase
+const filteredProjects = useMemo(() => {
+  if (activePhase === "all") return baseFiltered;
+  return baseFiltered.filter((p) => getProjectPhaseIds(p).includes(activePhase));
+}, [baseFiltered, activePhase]);
   const totalPages = Math.ceil(
     filteredProjects.length /
       ITEMS_PER_PAGE
@@ -1197,6 +1251,7 @@ export default function SectorFilterSection() {
     activeCategory,
     activeStatus,
     searchTerm,
+    activePhase
   ]);
 
   useEffect(() => {
@@ -1322,7 +1377,7 @@ export default function SectorFilterSection() {
         </div>
 
         {/* Search + filters */}
-        <div className="mb-10 flex flex-col items-stretch gap-3 md:flex-row md:items-center">
+        <div className="mb-6 flex flex-col items-stretch gap-3 md:flex-row md:items-center">
 
           {/* Search */}
           <div className="relative flex-1">
@@ -1415,6 +1470,13 @@ export default function SectorFilterSection() {
             </button>
           </div>
         </div>
+
+        <PhaseFilter
+  value={activePhase}
+  onChange={setActivePhase}
+  counts={phaseCounts}
+  total={baseFiltered.length}
+/>
 
         {/* Content */}
         <AnimatePresence mode="wait">
