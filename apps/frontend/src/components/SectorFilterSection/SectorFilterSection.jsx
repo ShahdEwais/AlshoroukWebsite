@@ -122,7 +122,7 @@ function ProjectCard({ project , activePhase}) {
         ))}
 
         {/* Image */}
-        <div className="relative aspect-[4/3] shrink-0 overflow-hidden">
+        <div className="relative aspect-[16/10] shrink-0 overflow-hidden lg:aspect-[16/9]"> 
           <img
             src={project.src}
             alt={project.title}
@@ -160,7 +160,7 @@ function ProjectCard({ project , activePhase}) {
         </div>
 
         {/* Content */}
-        <div className="flex flex-1 flex-col p-4">
+        <div className="flex flex-1 flex-col p-3.5">
           {/* Category */}
           <span className="text-[10px] font-semibold uppercase tracking-widest text-[#2A317A]">
             {project.category}
@@ -241,7 +241,7 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
   );
 
   return (
-    <div className="mt-10 flex flex-wrap items-center justify-center gap-1.5 sm:mt-12 sm:gap-2">
+    <div className="mt-6 flex flex-wrap items-center justify-center gap-1.5 sm:mt-7 sm:gap-2">   {/* كانت mt-10 / mt-12 */}
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
@@ -1142,6 +1142,30 @@ function MapView({
   );
 }
 
+function useStickyTop(ref) {
+  const [top, setTop] = useState(0);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const update = () =>
+      setTop(Math.min(0, window.innerHeight - el.offsetHeight));
+
+    update();
+
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    window.addEventListener("resize", update);
+
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", update);
+    };
+  }, [ref]);
+
+  return top;
+}
 /* =========================================================
    MAIN SECTION
    ========================================================= */
@@ -1168,6 +1192,7 @@ export default function SectorFilterSection() {
     useState(null);
 
   const sectionRef = useRef(null);
+  const stickyTop = useStickyTop(sectionRef);
 
   // const filteredProjects = useMemo(() => {
   //   return projectsWithDetails.filter(
@@ -1296,26 +1321,27 @@ const filteredProjects = useMemo(() => {
   };
 
   return (
-    <section
-      ref={sectionRef}
-      className="relative w-full bg-white px-4 py-12 sm:px-6 sm:py-16 lg:py-20"
-      id="sectors"
-    >
+  <section
+    ref={sectionRef}
+    style={{ top: stickyTop }}
+    className="sticky relative w-full bg-white px-4 py-8 sm:px-6 sm:py-10 lg:py-12"
+    id="sectors"
+  >
       <div className="mx-auto max-w-6xl">
 
         {/* Header */}
-        <div className="mb-10 text-center">
+        <div className=" mb-6 text-center">
           <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#2A317A]">
             Explore By Sector
           </span>
 
-          <h2 className="mt-2 text-3xl font-bold text-[#3C3C3B] md:text-4xl">
+          <h2 className="mt-1 text-2xl font-bold text-[#3C3C3B] md:text-3xl">
             Our Work, Organized
           </h2>
         </div>
 
         {/* Categories */}
-        <div className="mb-6 flex flex-wrap justify-center gap-3">
+        <div className="mb-4 flex flex-wrap justify-center gap-2 sm:gap-3">
           {categories.map(
             ({
               label,
@@ -1377,7 +1403,7 @@ const filteredProjects = useMemo(() => {
         </div>
 
         {/* Search + filters */}
-        <div className="mb-6 flex flex-col items-stretch gap-3 md:flex-row md:items-center">
+       <div className="mb-4 flex flex-col items-stretch gap-3 md:flex-row md:items-center">
 
           {/* Search */}
           <div className="relative flex-1">
@@ -1507,7 +1533,7 @@ const filteredProjects = useMemo(() => {
                   {/* PROJECT GRID */}
                   <motion.div
                     layout
-                    className="grid grid-cols-1 items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3"
+                    className="grid grid-cols-1 items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5"
                   >
                     <AnimatePresence mode="popLayout">
                       {paginatedProjects.map(
@@ -1519,6 +1545,8 @@ const filteredProjects = useMemo(() => {
                             project={
                               project
                             }
+
+                            activePhase={activePhase}
                           />
                         )
                       )}

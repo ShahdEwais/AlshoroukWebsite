@@ -5,7 +5,7 @@ import { useLanguage } from "../../locales/LanguageContext/LanguageContext";
 import { usePublishedProjects } from "../../features/marketing/MarketingProvider";
 import { bimPhases } from "../../features/projects/bimPhases";
 import "./Bimhero.css";
-
+import { getProjectPhaseIds } from "../../components/SectorFilterSection/PhaseFilter"; 
 const copy = {
   en: {
     eyebrow: "SHOROUK · BIM UNIT",
@@ -47,9 +47,14 @@ export default function BIMHero() {
   const projectTrack = useRef(null);
   const activeIndex = hovered ?? selected;
   const activePhase = activeIndex === null ? null : bimPhases[activeIndex];
+  // const activeProjects = activePhase
+  //   ? activePhase.projectIds.map((id) => projectsWithDetails.find((project) => project.id === id)).filter(Boolean)
+  //   : [];
   const activeProjects = activePhase
-    ? activePhase.projectIds.map((id) => projectsWithDetails.find((project) => project.id === id)).filter(Boolean)
-    : [];
+  ? projectsWithDetails.filter((project) =>
+      getProjectPhaseIds(project).includes(activePhase.id)
+    )
+  : [];
 
   return (
     <section className="bim-hero" dir={language === "ar" ? "rtl" : "ltr"}>
